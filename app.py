@@ -7,11 +7,12 @@ from PIL import Image
 model = tf.keras.models.load_model("plant_disease_model.h5")
 
 # Define class labels (replace with actual labels used in training)
-class_names = [
-    'Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust', 
-    'Apple___healthy', 'Tomato___Late_blight', 'Tomato___Leaf_Mold', 'Tomato___healthy'
-    # Add all classes here as per your training dataset
-]
+import json
+
+# Load class names from saved file
+with open("class_names.json", "r") as f:
+    class_names = json.load(f)
+
 
 st.title("🌿 Plant Disease Detection Web App")
 st.markdown("Upload an image of a plant leaf to detect the disease.")
