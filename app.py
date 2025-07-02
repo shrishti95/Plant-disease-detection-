@@ -16,18 +16,23 @@ class_names = [
 st.title("🌿 Plant Disease Detection Web App")
 st.markdown("Upload an image of a plant leaf to detect the disease.")
 
-uploaded_file = st.file_uploader("Choose a leaf image...", type=["jpg", "png", "jpeg"])
+# 🟡 This line was missing
+uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
-if uploaded_file:
-    image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded Image", use_column_width=True)
+if uploaded_file is not None:
+    # Open image and ensure it's in RGB mode
+    img = Image.open(uploaded_file).convert("RGB")  # 🔧 Force 3 channels
 
-    # Preprocess image
-    img = image.resize((128, 128))  # Resize to match training
+    # Resize to match model input
+    img = img.resize((128, 128))
+
+    # Normalize and prepare for prediction
     img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
 
+    # Prediction
     prediction = model.predict(img_array)
     predicted_class = class_names[np.argmax(prediction)]
 
-    st.success(f"🌱 Predicted Disease: **{predicted_class}**")
+    st.image(img, caption='Uploaded Image', use_container_width=True)
+    st.success(f"🌿 Predicted Disease: **{predicted_class}**")
